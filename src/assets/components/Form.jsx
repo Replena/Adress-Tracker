@@ -44,8 +44,9 @@ export default function Form({ data, setData }) {
 
     setInput("");
   };
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full md:w-3/5 lg:w-2/5">
+    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <label
           htmlFor="ipAddress"
