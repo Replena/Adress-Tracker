@@ -8,16 +8,30 @@ export default function Form({ data, setData }) {
     setInput(e.target.value);
   };
 
-  const includesLetters = (str) => {
-    return /[a-zA-Z]/.test(str);
+  const isValidDomain = (str) => {
+    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+    return domainRegex.test(str);
+  };
+
+  const isValidIP = (str) => {
+    const ipRegex =
+      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){2}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    return ipRegex.test(str);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const apiKey = import.meta.env.VITE_API_KEY;
-    const url = includesLetters(input)
-      ? `https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${apiKey}&domain=${input}`
-      : `https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${apiKey}&ipAddress=${input}`;
+
+    let url;
+    if (isValidDomain(input)) {
+      url = `https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${apiKey}&domain=${input}`;
+    } else if (isValidIP(input)) {
+      url = `https://geo.ipify.org/api/v2/country,city,vpn?apiKey=${apiKey}&ipAddress=${input}`;
+    } else {
+      console.log("Invalid input. Please enter a valid IP address or domain.");
+      return;
+    }
 
     axios
       .get(url)
